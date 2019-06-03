@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "myClass.cpp"
+#include "myClass.h"
 
 using std::cin;
 using std::cout;
@@ -20,6 +20,11 @@ int main(int argc, char **argv)
 	FI.Fak_matrix();
 
 	cout<<"hello, world!"<<endl;
+
+	NM_fup.freeLayer();
+	NM_fdown.freeLayer();
+
+	FI.freeLayer();
 
 	return 0;
 }
