@@ -17,24 +17,6 @@ using std::endl;
 //CLASS layer1
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-void layer1::freeLayer()
-//free space
-{
-	free_dvector(layer1::x, 1, layer1::numPoint);
-	free_dvector(layer1::w, 1, layer1::numPoint);
-
-	free_dvector(layer1::fb, 1, layer1::numPoint);
-	free_dvector(layer1::j, 1, layer1::numPoint);
-
-	free_dvector(layer1::S, 1, layer1::numPoint);
-
-	free_dmatrix(layer1::m1, 1, layer1::numPoint, 1, layer1::numPoint);
-	free_dmatrix(layer1::m2, 1, layer1::numPoint, 1, layer1::numPoint);
-	free_dmatrix(layer1::m3, 1, layer1::numPoint, 1, layer1::numPoint);
-
-	free_dmatrix(layer1::Fak, 1, layer1::numPoint, 1, 3*layer1::numPoint);
-}
-
 layer1::layer1(const char *namep, double ap, double bp, int nump)
 //initialize the layer
 {
@@ -51,6 +33,12 @@ layer1::layer1(const char *namep, double ap, double bp, int nump)
 	layer1::j = dvector(1, layer1::numPoint);
 
 	layer1::S = dvector(1, layer1::numPoint);
+
+	layer1::m1 = dmatrix(1, layer1::numPoint, 1, layer1::numPoint);
+	layer1::m2 = dmatrix(1, layer1::numPoint, 1, layer1::numPoint);
+	layer1::m3 = dmatrix(1, layer1::numPoint, 1, layer1::numPoint);
+
+	layer1::Fak = dmatrix(1, layer1::numPoint, 1, 3*layer1::numPoint);
 
 	gauleg(layer1::x_down, layer1::x_up, layer1::x, layer1::w, layer1::numPoint);	
 	//Gauss-Legendre quadrature formula to discretize [a,b]
@@ -78,25 +66,54 @@ layer1::layer1(const char *namep, double ap, double bp, int nump)
 	cout<<layer1::name<<" <x> done..."<<endl;
 }
 
+
+void layer1::freeLayer()
+//free space
+{
+	free_dvector(layer1::x, 1, layer1::numPoint);
+	free_dvector(layer1::w, 1, layer1::numPoint);
+
+	free_dvector(layer1::fb, 1, layer1::numPoint);
+	free_dvector(layer1::j, 1, layer1::numPoint);
+
+	free_dvector(layer1::S, 1, layer1::numPoint);
+
+	free_dmatrix(layer1::m1, 1, layer1::numPoint, 1, layer1::numPoint);
+	free_dmatrix(layer1::m2, 1, layer1::numPoint, 1, layer1::numPoint);
+	free_dmatrix(layer1::m3, 1, layer1::numPoint, 1, layer1::numPoint);
+
+	free_dmatrix(layer1::Fak, 1, layer1::numPoint, 1, 3*layer1::numPoint);
+}
+
 void layer1::S_vector()
 {
+
+/*
+	1.判断S文件是否存在，若存在，则直接读取，不存在继续
+	2.执行外接函数double S
+			S被积函数 __device__
+			kernal函数：调用S被积函数，GPU并行求值 __global__
+			double S：调用kernal然后累加
+	3.赋值给layer::S，并输出文件
+*/
+
 	for(int i = 1; i <= layer1::numPoint; i++)
 		layer1::S[i]=0.0;
 }
 
 void layer1::Fak_matrix_flup()
 {
-	layer1::m1 = dmatrix(1, layer1::numPoint, 1, layer1::numPoint);
+	
 }
 
 void layer1::Fak_matrix_fldown()
 {
-	layer1::m2 = dmatrix(1, layer1::numPoint, 1, layer1::numPoint);
+	
 }
 
 void layer1::Fak_matrix_nm()
 {
-	layer1::m3 = dmatrix(1, layer1::numPoint, 1, layer1::numPoint);
+	
 }
 
 void layer1::Fak_matrix()
@@ -104,8 +121,6 @@ void layer1::Fak_matrix()
 	layer1::Fak_matrix_flup();
 	layer1::Fak_matrix_fldown();
 	layer1::Fak_matrix_nm();
-
-	layer1::Fak = dmatrix(1, layer1::numPoint, 1, 3*layer1::numPoint);
 
 	for(int i = 1; i <= layer1::numPoint; i++)
 	{
@@ -124,24 +139,6 @@ void layer1::Fak_matrix()
 //CLASS layer2
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-void layer2::freeLayer()
-//free space
-{
-	free_dvector(layer2::x, 1, layer2::numPoint);
-	free_dvector(layer2::w, 1, layer2::numPoint);
-
-	free_dvector(layer2::nmb, 1, layer2::numPoint);
-	free_dvector(layer2::j, 1, layer2::numPoint);
-
-	free_dvector(layer2::S, 1, layer2::numPoint);
-
-	free_dmatrix(layer2::m1, 1, layer2::numPoint, 1, layer2::numPoint);
-	free_dmatrix(layer2::m2, 1, layer2::numPoint, 1, layer2::numPoint);
-	free_dmatrix(layer2::m3, 1, layer2::numPoint, 1, layer2::numPoint);
-
-	free_dmatrix(layer2::Fak, 1, layer2::numPoint, 1, 3*layer2::numPoint);
-}
-
 layer2::layer2(const char *namep, double ap, double bp, int nump)
 //initialize the layer
 {
@@ -158,6 +155,12 @@ layer2::layer2(const char *namep, double ap, double bp, int nump)
 	layer2::j = dvector(1, layer2::numPoint);
 
 	layer2::S = dvector(1, layer2::numPoint);
+
+	layer2::m1 = dmatrix(1, layer2::numPoint, 1, layer2::numPoint);
+	layer2::m2 = dmatrix(1, layer2::numPoint, 1, layer2::numPoint);
+	layer2::m3 = dmatrix(1, layer2::numPoint, 1, layer2::numPoint);
+
+	layer2::Fak = dmatrix(1, layer2::numPoint, 1, 3*layer2::numPoint);
 
 	gauleg(layer2::x_down, layer2::x_up, layer2::x, layer2::w, layer2::numPoint);	
 	//Gauss-Legendre quadrature formula to discretize [a,b]
@@ -185,6 +188,24 @@ layer2::layer2(const char *namep, double ap, double bp, int nump)
 	cout<<layer2::name<<" <x> done..."<<endl;
 }
 
+void layer2::freeLayer()
+//free space
+{
+	free_dvector(layer2::x, 1, layer2::numPoint);
+	free_dvector(layer2::w, 1, layer2::numPoint);
+
+	free_dvector(layer2::nmb, 1, layer2::numPoint);
+	free_dvector(layer2::j, 1, layer2::numPoint);
+
+	free_dvector(layer2::S, 1, layer2::numPoint);
+
+	free_dmatrix(layer2::m1, 1, layer2::numPoint, 1, layer2::numPoint);
+	free_dmatrix(layer2::m2, 1, layer2::numPoint, 1, layer2::numPoint);
+	free_dmatrix(layer2::m3, 1, layer2::numPoint, 1, layer2::numPoint);
+
+	free_dmatrix(layer2::Fak, 1, layer2::numPoint, 1, 3*layer2::numPoint);
+}
+
 void layer2::S_vector()
 {
 	for(int i = 1; i <= layer2::numPoint; i++)
@@ -193,17 +214,17 @@ void layer2::S_vector()
 
 void layer2::Fak_matrix_flup()
 {
-	layer2::m1 = dmatrix(1, layer2::numPoint, 1, layer2::numPoint);
+	
 }
 
 void layer2::Fak_matrix_fldown()
 {
-	layer2::m2 = dmatrix(1, layer2::numPoint, 1, layer2::numPoint);
+	
 }
 
 void layer2::Fak_matrix_nm()
 {
-	layer2::m3 = dmatrix(1, layer2::numPoint, 1, layer2::numPoint);
+	
 }
 
 void layer2::Fak_matrix()
@@ -211,8 +232,6 @@ void layer2::Fak_matrix()
 	layer2::Fak_matrix_flup();
 	layer2::Fak_matrix_fldown();
 	layer2::Fak_matrix_nm();
-
-	layer2::Fak = dmatrix(1, layer2::numPoint, 1, 3*layer2::numPoint);
 
 	for(int i = 1; i <= layer2::numPoint; i++)
 	{
