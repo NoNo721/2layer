@@ -49,7 +49,7 @@ find_package(CUDA)
 set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} -g -O3 -std=c++11 -cudart static -gencode arch=compute_60,code=sm_60")
 
 #use CUDA C/C++ compiler nvcc to creat the executable file
-cuda_add_executable(../bin/magnon.exe ${SOURCES} ${HEADERS})
+cuda_add_executable(magnon.exe ${SOURCES} ${HEADERS})
 
 #link the executable file with all libraries
-target_link_libraries(../bin/magnon.exe ${EXTRA_LIBS})
+target_link_libraries(magnon.exe ${EXTRA_LIBS})
